@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sysbench-slave1-1
+  namespace: sysbench
+spec:
+  restartPolicy: Never
+  containers:
+    - name: sysbench
+      image: joeyvalentine/sysbench:1.0.20
+      imagePullPolicy: IfNotPresent
+      resources:
+        requests:
+          cpu: "2"
+          memory: "4Gi"
+        limits:
+          cpu: "2"
+          memory: "4Gi"
+      command: ["sysbench"]
+      args: ["--cpu-max-prime=80000000", "--threads=2", "cpu", "run"]

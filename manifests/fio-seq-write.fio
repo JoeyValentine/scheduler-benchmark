@@ -1,0 +1,18 @@
+; fio-seq-write.job for fiotest
+
+[global]
+name=fio-seq-write
+directory=/var/lib/fio/data
+filename=fio-seq-write
+rw=write
+bs=128K
+numjobs=1
+group_reporting=1
+rate=10m,50m
+io_submit_mode=offload
+rate_process=poisson
+
+[file1]
+size=10G
+ioengine=libaio
+iodepth=16

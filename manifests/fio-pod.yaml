@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fio-slave1-1
+  namespace: fio
+spec:
+  restartPolicy: Never
+  containers:
+    - name: fio
+      image: joeyvalentine/fio:3.27
+      imagePullPolicy: IfNotPresent
+      resources:
+        requests:
+          cpu: "2"
+          memory: "4Gi"
+          sogang.ac.kr/bandwidth: "15Mi"
+        limits:
+          cpu: "2"
+          memory: "4Gi"
+          sogang.ac.kr/bandwidth: "15Mi"
+      command: [ "fio" ]
+      args: [ "/etc/fio/jobs/fio-seq-write-15.fio", "--output-format=json+"]
+      volumeMounts:
+        - name: fio-data
+          mountPath: /var/lib/fio/data
+        - name: job-files-dir
+          mountPath: /etc/fio/jobs
+        - name: job-file
+          mountPath: /etc/fio/jobs/fio-seq-write-15.fio
+  volumes:
+    - name: fio-data
+      persistentVolumeClaim:
+        claimName: fio-pvc-slave1-1
+    - name: job-files-dir
+      hostPath:
+        path: /home/joey/fio-benchmark/jobs
+        type: DirectoryOrCreate
+    - name: job-file
+      hostPath:
+        path: /home/joey/fio-benchmark/jobs/fio-seq-write-15.fio
+        type: FileOrCreate
